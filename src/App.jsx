@@ -9,7 +9,7 @@ import Footer from './sections/Footer';
 export default function App() {
   return (
     /* REMOVED overflow-x-hidden from here */
-    <div className="font-sans bg-white text-gray-900"> 
+    <div className="font-sans bg-white text-gray-900 w-full"> 
       <Navbar />
       <Hero />
       <Features />

@@ -1,6 +1,10 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import posterImg from '../assets/gaming.png';
 import { useState, useEffect, useRef } from 'react';
+import img1 from '../assets/img1.png'
+import img2 from '../assets/img2.png'
+import img3 from '../assets/img3.png'
+import img4 from '../assets/img4.png'
+import img5 from '../assets/img5.png'
 
 // --- FEATURES MARQUEE ROW ---
 const features = [
@@ -18,19 +22,29 @@ const features = [
 
 function FeatureMarquee() {
     const items = [...features, ...features];
+
     return (
-        <div className="w-full overflow-hidden py-12" style={{ background: 'transparent' }}>
-            <div className="flex gap-4 w-max" style={{ animation: 'marquee-scroll 30s linear infinite' }}>
+        <div className="w-full overflow-hidden py-12 sm:py-16 lg:py-20">
+            <div
+                className="flex gap-3 sm:gap-4 w-max"
+                style={{ animation: 'marquee-scroll 40s linear infinite' }}
+            >
                 {items.map((feat, i) => (
                     <div
                         key={i}
-                        className="flex items-center gap-2.5 px-5 py-2.5 rounded-[1rem] border border-violet-100/80 bg-white/70 backdrop-blur-sm shadow-sm whitespace-nowrap select-none"
+                        className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-[1rem] whitespace-nowrap select-none"
                         style={{ fontFamily: "'Comfortaa', cursive" }}
                     >
-                        <span className="text-sm font-semibold text-gray-800 tracking-tight">{feat.label}</span>
+                        <span
+                            style={{ textShadow: "0 0 1px #000" }}
+                            className="text-sm sm:text-base md:text-lg lg:text-xl font-black text-slate-900 tracking-tight"
+                        >
+                            {feat.label.toUpperCase()}
+                        </span>
                     </div>
                 ))}
             </div>
+
             <style>{`
                 @keyframes marquee-scroll {
                     0% { transform: translateX(0); }
@@ -41,43 +55,84 @@ function FeatureMarquee() {
     );
 }
 
+const images = [img1, img2, img3, img4, img5];
+
 // --- ANIMATED IMAGE SECTION ---
 function ImageSection() {
     const containerRef = useRef(null);
+
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start end", "center center"] 
+        offset: ["start end", "end start"],
     });
 
-    const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+    const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
+    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
     return (
-        <section ref={containerRef} className="relative w-full py-20 flex justify-center items-center px-4 overflow-hidden">
-            <motion.div 
-                style={{ scale, opacity }}
-                className="relative w-full max-w-5xl rounded-[40px] lg:rounded-[60px] overflow-hidden shadow-2xl border border-white/20 bg-gray-100"
-            >
-                <img
-                    src={posterImg}
-                    alt="LinkBrain Visual"
-                    className="w-full h-auto object-cover"
-                />
-            </motion.div>
+        <section
+            ref={containerRef}
+            // Removed md:-top-20 to fix layout shifting; added h-[120vh] for cleaner scroll timing
+            className="relative w-full h-[100vh] flex justify-center items-start"
+        >
+            <div className="sticky top-0 w-full flex items-center justify-center overflow-hidden">
+                <motion.div 
+                    style={{ scale, opacity }}
+                    className="w-[90%] max-w-[1200px] aspect-video flex items-center justify-center"
+                >
+                    {images.map((img, i) => {
+                        const multiplier = i - Math.floor(images.length / 2);
+                        const xMove = useTransform(scrollYProgress, [0.1, 0.6], [0, multiplier * 300]); 
+                        const rotate = useTransform(scrollYProgress, [0.1, 0.6], [0, multiplier * 15]);
+                        const yMove = useTransform(scrollYProgress, [0.1, 0.6], [0, Math.abs(multiplier) * 40]);
+
+                        return (
+                            <motion.div
+                                key={i}
+                                style={{
+                                    x: xMove,
+                                    y: yMove,
+                                    rotateZ: rotate,
+                                    zIndex: images.length - Math.abs(multiplier),
+                                }}
+                                className="absolute w-[250px] sm:w-[350px] md:w-[450px] lg:w-[500px] aspect-[3/4] sm:aspect-video"
+                            >
+                                <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gray-900">
+                                    <motion.img
+                                        src={img}
+                                        alt={`gallery-${i}`}
+                                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
+                                    />
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        className="z-[10] pointer-events-none text-center"
+                    >
+                        <h2 className="text-4xl md:text-7xl font-bold text-white drop-shadow-2xl uppercase tracking-tighter">
+                            The Collection
+                        </h2>
+                    </motion.div>
+                </motion.div>
+            </div>
         </section>
     );
 }
 
-// --- THE SPREAD WHITE GLOW COMPONENT ---
+// --- GLOW ---
 function GlowEffect() {
     return (
-        <div 
-            className="absolute pointer-events-none -z-1"
+        <div
+            className="absolute pointer-events-none -z-10"
             style={{
                 width: '60vw',
                 maxWidth: '800px',
                 aspectRatio: '1/1',
-                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 75%)',
+                background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 40%, transparent 75%)',
                 filter: 'blur(40px)',
                 top: '50%',
                 left: '50%',
@@ -91,116 +146,91 @@ function GlowEffect() {
 export default function LinkBrainPage() {
     const [input, setInput] = useState('');
 
-    const handleGenerate = () => {
-        console.log(`Searching for: ${input}`);
-    };
-
     return (
-        <main className="relative w-full overflow-x-hidden" style={{ background: '#FAF8FF' }}>
-            
-            {/* GLOBAL DOT BACKGROUND */}
+        <main className="relative w-full overflow-x-hidden antialiased" style={{ background: '#FAF8FF' }}>
             <WaveDotsBackground />
 
-            {/* === SECTION 1: HERO === */}
-            <section
-                className="relative z-10 h-screen w-full flex flex-col items-center justify-center overflow-hidden"
-            >
+            {/* HERO - Added pb-0 to transition smoothly into the marquee */}
+            <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-hidden pt-32 pb-0">
                 <GlowEffect />
+                <div className="w-full mx-auto px-4 sm:px-6 lg:px-16 flex flex-col items-center text-center gap-10">
+                    <div className="w-full flex flex-col md:flex-row items-center justify-center gap-10 lg:gap-16">
+                        {/* LEFT CONTENT */}
+                        <div className="flex-1 flex flex-col items-center text-center md:text-left gap-6">
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="inline-flex items-center gap-2 border border-violet-100 text-violet-600 text-xs font-semibold py-2 px-5 rounded-full bg-white/60 backdrop-blur-md"
+                            >
+                                <span className="w-2 h-2 rounded-full bg-violet-400" />
+                                transform physical spaces into personalized AI agents
+                            </motion.div>
 
-                <div className="w-full max-w-7xl flex flex-col items-center relative z-10 px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-10 inline-flex items-center gap-2 border border-violet-100 text-violet-600 text-xs font-semibold py-2 px-6 rounded-full shadow-sm bg-white/60 backdrop-blur-md"
-                    >
-                        <span className="w-2 h-2 rounded-full bg-violet-400" />
-                        transform physical spaces into personalized AI agents
-                    </motion.div>
-
-                    <motion.div
-                        variants={stagger}
-                        initial="hidden"
-                        animate="visible"
-                        className="w-full text-center flex flex-col items-center gap-8"
-                    >
-                        <motion.h1
-                            variants={fadeUp}
-                            className="text-6xl sm:text-8xl lg:text-[150px] leading-none tracking-tighter"
-                            style={{
-                                fontFamily: "'Comfortaa', cursive",
-                                fontWeight: 800,
-                                letterSpacing: '-0.06em',
-                            }}
-                        >
-                            <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-700 via-violet-500 to-indigo-200">
+                            <motion.h1
+                                className="text-4xl sm:text-6xl lg:text-8xl leading-tight tracking-tight"
+                                style={{ fontFamily: "'Comfortaa', cursive", fontWeight: 800 }}
+                            >
+                                <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-700 via-violet-500 to-indigo-200">
                                 LinkBrain
-                            </span>
-                        </motion.h1>
+                                </span>
+                            </motion.h1>
 
-                        <motion.p
-                            variants={fadeUp}
-                            className="text-lg sm:text-xl text-gray-500/80 leading-relaxed max-w-2xl font-normal"
-                        >
-                            We provide intelligent services that transform physical spaces into{' '}
-                            <span className="text-violet-600/80 font-medium">personalized AI agents</span>.
-                        </motion.p>
+                            <motion.p className="text-base sm:text-lg lg:text-xl text-gray-500/80 leading-relaxed max-w-md">
+                                We provide intelligent services that transform physical spaces into{" "}
+                                <span className="text-violet-600 font-medium">personalized AI agents</span>.
+                            </motion.p>
 
-                        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
-                            <a
-                                href="#contact"
-                                className="group relative px-10 py-4 rounded-full font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(139,92,246,0.3)]"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-indigo-500" />
-                                <span className="relative z-10">Experience LinkBrain</span>
-                            </a>
-                            <a
-                                href="#how-it-works"
-                                className="px-10 py-4 rounded-full font-semibold text-gray-700 bg-white/60 backdrop-blur-md border border-gray-200 hover:border-violet-300 hover:text-violet-600 transition-all duration-300 shadow-sm"
-                            >
-                                How It Works
-                            </a>
-                        </motion.div>
-                    </motion.div>
-                </div>
+                            <motion.div className="flex flex-col sm:flex-row gap-4 mt-2">
+                                <a className="px-8 py-4 rounded-full font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-500 shadow-lg hover:scale-105 transition cursor-pointer">
+                                    Experience LinkBrain
+                                </a>
+                                <a className="px-8 py-4 rounded-full font-semibold text-gray-700 bg-white border border-gray-200 hover:text-violet-600 transition cursor-pointer">
+                                    How It Works
+                                </a>
+                            </motion.div>
+                        </div>
 
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-50">
-                    <div className="w-px h-12 bg-violet-200 relative overflow-hidden">
-                        <motion.div 
-                            animate={{ y: [0, 48] }} 
-                            transition={{ repeat: Infinity, duration: 1.5 }} 
-                            className="absolute top-0 w-full h-1/2 bg-violet-500" 
-                        />
+                        {/* RIGHT IMAGE */}
+                        <div className="flex-1 flex justify-center">
+                            <img src="/hero.png" alt="Hero" className="w-full max-w-2xl object-contain" />
+                        </div>
+                    </div>
+
+                    <div className="w-full mt-20">
+                        <p className="text-[10px] tracking-[0.3em] uppercase font-bold text-gray-400 mb-2" style={{ fontFamily: "'Comfortaa', cursive" }}>
+                            What LinkBrain Brings
+                        </p>
+                        <FeatureMarquee />
                     </div>
                 </div>
             </section>
 
-            {/* === SECTION 2: CONTENT === */}
-            <div>
+            {/* IMAGE SECTION - Adjusted padding and removed heading margin bottom for tighter visual link */}
+            <section className='py-20 bg-white/30 backdrop-blur-sm'>
+                <h2 className='text-3xl md:text-5xl lg:text-6xl font-extrabold text-center mb-0 tracking-tighter' style={{ fontFamily: "'Comfortaa', cursive" }}>
+                    Our Features
+                </h2>
                 <ImageSection />
-                
-                <div className="w-full pb-20">
-                    <p className="text-center text-[10px] tracking-[0.3em] uppercase font-bold text-gray-400 mb-8" style={{ fontFamily: "'Comfortaa', cursive" }}>
-                        What LinkBrain Brings
-                    </p>
-                    <FeatureMarquee />
-                </div>
-            </div>
+            </section>
 
-            {/* === BUILDER SECTION === */}
-            <section className="relative min-h-[600px] flex items-center justify-center py-20 px-4">
-                <div className="relative z-10 w-full max-w-4xl text-center flex flex-col items-center gap-6">
-                    <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "'Comfortaa', cursive" }}>
+            {/* BUILDER - Added pt-0 because ImageSection is already tall (h-[120vh]) */}
+            <section className="flex items-center justify-center pb-24 sm:pb-32 px-4">
+                <div className="w-full max-w-4xl text-center flex flex-col items-center ">
+                    <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "'Comfortaa', cursive" }}>
                         Explore Physical <span className="bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">AI Agents</span>
                     </h2>
-                    <div className="w-[80%] sm:w-[60%] flex items-center bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm">
-                        <input 
-                            type="text" 
-                            placeholder="e.g. smart cafe" 
-                            value={input} 
-                            onChange={(e) => setInput(e.target.value)} 
-                            className="flex-1 outline-none text-sm px-2 bg-transparent" 
+
+                    <div className="w-full max-w-xl flex items-center bg-white border border-gray-200 rounded-full px-4 py-3 shadow-sm mt-2">
+                        <input
+                            type="text"
+                            placeholder="e.g. smart cafe"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            className="flex-1 outline-none text-base px-2 bg-transparent"
                         />
-                        <button onClick={handleGenerate} className="bg-black text-white text-xs sm:text-sm px-5 py-2 rounded-full">Know More</button>
+                        <button className="bg-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-violet-600 transition-colors">
+                            Know More
+                        </button>
                     </div>
                 </div>
             </section>
@@ -208,59 +238,38 @@ export default function LinkBrainPage() {
     );
 }
 
-// Animation Helpers
-const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.15 } } };
-const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
-};
-
-// --- GLOBAL BACKGROUND ---
+// BACKGROUND (Canvas dots logic remains untouched)
 function WaveDotsBackground() {
     const canvasRef = useRef(null);
-
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let W, H, raf, t = 0;
-
-        const resize = () => { 
-            W = canvas.width = window.innerWidth; 
-            H = canvas.height = window.innerHeight; 
+        const resize = () => {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
         };
-
         const draw = () => {
             ctx.clearRect(0, 0, W, H);
             t += 0.015;
-
-            for (let r = 0; r < H/35 + 1; r++) {
-                for (let c = 0; c < W/35 + 1; c++) {
+            for (let r = 0; r < H / 35; r++) {
+                for (let c = 0; c < W / 35; c++) {
                     const wave = Math.sin(c * 0.16 + r * 0.04 - t) * 0.5 + 0.5;
                     ctx.beginPath();
-                    ctx.arc(c*35, r*35, 0.8 + wave * 0.8, 0, Math.PI*2);
-                    ctx.fillStyle = `rgba(124, 58, 237, ${0.08 + wave * 0.15})`;
+                    ctx.arc(c * 35, r * 35, 0.8 + wave * 0.8, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(124,58,237,${0.08 + wave * 0.15})`;
                     ctx.fill();
                 }
             }
-
             raf = requestAnimationFrame(draw);
         };
-        
         resize();
         draw();
-
         window.addEventListener('resize', resize);
         return () => {
             cancelAnimationFrame(raf);
             window.removeEventListener('resize', resize);
         };
     }, []);
-
-    return (
-        <canvas 
-            ref={canvasRef} 
-            className="fixed inset-0 w-full h-full -z-0 pointer-events-none"
-        />
-    );
+    return <canvas ref={canvasRef} className="fixed inset-0 w-full h-full -z-0 pointer-events-none" />;
 }
