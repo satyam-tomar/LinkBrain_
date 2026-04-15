@@ -1,10 +1,11 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import img1 from '../assets/img1.png'
 import img2 from '../assets/img2.png'
 import img3 from '../assets/img3.png'
 import img4 from '../assets/img4.png'
 import img5 from '../assets/img5.png'
+import img6 from '../assets/img6.png'
 
 // --- FEATURES MARQUEE ROW ---
 const features = [
@@ -59,6 +60,7 @@ const images = [img1, img2, img3, img4, img5];
 
 // --- ANIMATED IMAGE SECTION ---
 function ImageSection() {
+    const [selectedImg, setSelectedImg] = useState(null);
     const containerRef = useRef(null);
 
     const { scrollYProgress } = useScroll({
@@ -72,8 +74,7 @@ function ImageSection() {
     return (
         <section
             ref={containerRef}
-            // Removed md:-top-20 to fix layout shifting; added h-[120vh] for cleaner scroll timing
-            className="relative w-full h-[100vh] flex justify-center items-start"
+            className="relative w-full  flex justify-center items-start"
         >
             <div className="sticky top-0 w-full flex items-center justify-center overflow-hidden">
                 <motion.div 
@@ -89,13 +90,14 @@ function ImageSection() {
                         return (
                             <motion.div
                                 key={i}
+                                onClick={() => setSelectedImg(img)}
                                 style={{
                                     x: xMove,
                                     y: yMove,
                                     rotateZ: rotate,
                                     zIndex: images.length - Math.abs(multiplier),
                                 }}
-                                className="absolute w-[250px] sm:w-[350px] md:w-[450px] lg:w-[500px] aspect-[3/4] sm:aspect-video"
+                                className="absolute w-[250px] sm:w-[350px] md:w-[450px] lg:w-[500px] aspect-[3/4] sm:aspect-video cursor-zoom-in"
                             >
                                 <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gray-900">
                                     <motion.img
@@ -119,6 +121,39 @@ function ImageSection() {
                     </motion.div>
                 </motion.div>
             </div>
+
+            {/* FULLSCREEN OVERLAY */}
+            <AnimatePresence>
+                {selectedImg && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedImg(null)}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 cursor-zoom-out"
+                    >
+                        {/* Close Button */}
+                        <motion.button
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute top-8 right-8 text-white text-4xl font-light hover:rotate-90 transition-transform duration-300"
+                            onClick={() => setSelectedImg(null)}
+                        >
+                            ✕
+                        </motion.button>
+
+                        <motion.img
+                            layoutId={selectedImg} // Smooth transition if you add layoutId to small images too
+                            initial={{ scale: 0.8, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.8, y: 20 }}
+                            src={selectedImg}
+                            className="max-w-full max-h-[85vh] rounded-lg shadow-2xl border border-white/20 object-contain"
+                            onClick={(e) => e.stopPropagation()} // Prevents closing when clicking the image itself
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }
@@ -213,8 +248,29 @@ export default function LinkBrainPage() {
                 <ImageSection />
             </section>
 
-            {/* BUILDER - Added pt-0 because ImageSection is already tall (h-[120vh]) */}
-            <section className="flex items-center justify-center pb-24 sm:pb-32 px-4">
+
+
+        <section className="flex flex-col items-center justify-center pb-24 sm:pb-32 px-4 overflow-hidden">
+    
+            {/* NEW FULL-WIDTH RESPONSIVE IMAGE CONTAINER */}
+            <motion.div 
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative w-full max-w-[1400px] aspect-[16/9] md:aspect-[21/9] rounded-[2rem] overflow-hidden shadow-2xl border border-gray-200 bg-gray-100"
+            >
+                <img 
+                    src={img6} 
+                    alt="LinkBrain Interface" 
+                    className="w-full h-full object-cover"
+                />
+                
+                {/* Subtle glassmorphism overlay to keep it classic */}
+                <div className="absolute inset-0 bg-gradient-to-t from-violet-900/20 to-transparent pointer-events-none" />
+            </motion.div>
+        </section>
+            {/* <section className="flex items-center justify-center pb-24 sm:pb-32 px-4">
                 <div className="w-full max-w-4xl text-center flex flex-col items-center ">
                     <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight" style={{ fontFamily: "'Comfortaa', cursive" }}>
                         Explore Physical <span className="bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">AI Agents</span>
@@ -233,7 +289,7 @@ export default function LinkBrainPage() {
                         </button>
                     </div>
                 </div>
-            </section>
+            </section> */}
         </main>
     );
 }
