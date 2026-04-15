@@ -1,21 +1,21 @@
-import Navbar from './components/Navbar';
-import Hero from './sections/Hero';
-import Features from './sections/Features';
-import Showcase from './sections/Showcase';
-import CTA from './sections/CTA';
-import Footer from './sections/Footer';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// import MainLayout from './components/MainLayout';
+import Home from './pages/Home';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
+import Layout from './sections/Layout';
 
-// App.jsx
 export default function App() {
   return (
-    /* REMOVED overflow-x-hidden from here */
-    <div className="font-sans bg-white text-gray-900 w-full"> 
-      <Navbar />
-      <Hero />
-      <Features />
-      <Showcase />
-      <CTA />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Parent Route with Layout */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="services" element={<Services />} />
+          <Route path="contact" element={<Contact />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

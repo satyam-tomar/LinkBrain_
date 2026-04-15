@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import Accordian from '../components/Accordian';
 
 export default function CTA() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="contact" className="relative py-24 px-6 lg:px-10 overflow-hidden">
+    <section id="contact" className="relative py-24 px-2 overflow-hidden">
       
       {/* --- BACKGROUND FILL: Continued from previous sections --- */}
       <div className="absolute inset-0 -z-10 bg-[#fafafa]">
@@ -21,13 +22,13 @@ export default function CTA() {
         />
       </div>
 
-      <div className="max-w-5xl mx-auto">
+      <div className="w-full mx-auto">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-violet-600 via-indigo-600 to-violet-700 p-12 lg:p-20 text-center shadow-[0_40px_100px_rgba(139,92,246,0.25)]"
+          className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-white via-purple-300 to-white p-12 lg:p-20 text-center shadow-[0_40px_100px_rgba(139,92,246,0.25)]"
         >
           {/* Decorative Internal Blobs (Heavy Fill) */}
           <motion.div 
@@ -57,12 +58,12 @@ export default function CTA() {
             }}
           />
 
-          <div className="relative z-10">
+          <div className="relative z-10 w-2xl">
             <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={inView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: 0.3 }}
-                className="mb-8 inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-[10px] font-bold uppercase tracking-[0.3em] px-6 py-2 rounded-full"
+                className="mb-8 inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-black text-[10px] font-bold uppercase tracking-[0.3em] px-6 py-2 rounded-full"
             >
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                 System Status: Ready for Deployment
@@ -74,7 +75,7 @@ export default function CTA() {
               starts with a link.
             </h2>
             
-            <p className="text-violet-100/80 text-lg lg:text-xl mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
+            <p className="text-black text-lg lg:text-xl mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
               Join the pioneers turning static architecture into autonomous ecosystems. Deploy your first Physical AI Agent today.
             </p>
 
@@ -88,7 +89,7 @@ export default function CTA() {
               </a>
               <a
                 href="#custom-talks"
-                className="px-10 py-4 bg-white/10 backdrop-blur-xl text-white font-bold rounded-full text-sm border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300"
+                className="px-10 py-4 bg-black backdrop-blur-xl text-white font-bold rounded-full text-sm border border-white/20 hover:bg-gray-950/50 hover:border-white/40 transition-all duration-300"
               >
                 Schedule Consultation
               </a>
@@ -102,12 +103,16 @@ export default function CTA() {
                         </div>
                     ))}
                 </div>
-                <p className="text-violet-200/50 text-[11px] font-semibold tracking-wide uppercase">
+                <p className="text-black text-[11px] font-semibold tracking-wide uppercase">
                     Trusted by 200+ Smart Spaces Worldwide
                 </p>
             </div>
           </div>
+
         </motion.div>
+         <div className='mt-12'>
+           <Accordian/>
+         </div>
       </div>
     </section>
   );

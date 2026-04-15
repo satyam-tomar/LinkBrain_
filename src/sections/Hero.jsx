@@ -25,7 +25,7 @@ function FeatureMarquee() {
     const items = [...features, ...features];
 
     return (
-        <div className="w-full overflow-hidden py-12 sm:py-16 lg:py-20">
+        <div className="w-full overflow-hidden py-12 sm:py-16 lg:py-10">
             <div
                 className="flex gap-3 sm:gap-4 w-max"
                 style={{ animation: 'marquee-scroll 40s linear infinite' }}
