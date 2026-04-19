@@ -126,7 +126,7 @@ export default function Contact() {
   };
 
   try {
-    const res = await fetch("http://localhost:3000/api/v1/contact", {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
