@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Accordian from '../components/Accordian';
+import {Link} from "react-router-dom";
 
 export default function CTA() {
   const ref = useRef(null);
@@ -80,19 +81,19 @@ export default function CTA() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-              <a
-                href="#"
+              <Link
+               to={'/services'}
                 className="group relative px-10 py-4 bg-white text-violet-700 font-bold rounded-full text-sm shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden"
               >
                 <span className="relative z-10">Get Started — Free Demo</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-violet-100/50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              </a>
-              <a
-                href="#custom-talks"
+              </Link>
+              <Link
+               to={'/contact'}
                 className="px-10 py-4 bg-black backdrop-blur-xl text-white font-bold rounded-full text-sm border border-white/20 hover:bg-gray-950/50 hover:border-white/40 transition-all duration-300"
               >
                 Schedule Consultation
-              </a>
+              </Link>
             </div>
 
             <div className="flex items-center justify-center gap-6 mt-10">
