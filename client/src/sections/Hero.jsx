@@ -6,6 +6,7 @@ import img3 from '../assets/img3.png'
 import img4 from '../assets/img4.png'
 import img5 from '../assets/img5.png'
 import img6 from '../assets/img6.png'
+import { Link } from 'react-router-dom';
 
 // --- FEATURES MARQUEE ROW ---
 const features = [
@@ -216,12 +217,12 @@ export default function LinkBrainPage() {
                             </motion.p>
 
                             <motion.div className="flex flex-col sm:flex-row gap-4 mt-2">
-                                <a className="px-8 py-4 rounded-full font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-500 shadow-lg hover:scale-105 transition cursor-pointer">
+                                {/* <a >
                                     Experience LinkBrain
-                                </a>
-                                <a className="px-8 py-4 rounded-full font-semibold text-gray-700 bg-white border border-gray-200 hover:text-violet-600 transition cursor-pointer">
-                                    How It Works
-                                </a>
+                                </a> */}
+                                <Link to={'/services'} className="px-8 py-4 rounded-full font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-500 shadow-lg hover:scale-105 transition cursor-pointer">
+                                     Experience LinkBrain
+                                </Link>
                             </motion.div>
                         </div>
 
