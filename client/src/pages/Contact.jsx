@@ -250,7 +250,54 @@ export default function Contact() {
           </div>
 
           <div className="p-10 md:p-16 bg-gradient-to-br from-violet-600 to-indigo-700 text-white flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -mr-32 -mt-32" />
+             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -mr-32 -mt-32" />
+
+            <div className="relative z-10">
+              <span className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black tracking-widest uppercase backdrop-blur-md">Node: Global_HQ</span>
+              <h3 className="text-3xl font-light mt-6">System <br/><span className="font-bold italic">Capabilities</span></h3>
+              
+              {/* Animated Service Nodes */}
+              <div className="mt-10 space-y-6">
+                {[
+                  { label: "Studio Acoustics AI", val: "Active", color: "bg-emerald-400" },
+                  { label: "Showroom Analytics", val: "Live", color: "bg-blue-400" },
+                  { label: "Campus Automation", val: "Operational", color: "bg-amber-400" }
+                ].map((node, i) => (
+                  <motion.div key={i} initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 + (i * 0.1) }} className="flex items-center justify-between p-4 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-md">
+                    <span className="text-sm font-medium">{node.label}</span>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${node.color} animate-pulse`} />
+                      <span className="text-[10px] font-black uppercase opacity-60">{node.val}</span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Insight Area */}
+            <div className="relative z-10 mt-20 p-6 rounded-3xl bg-slate-950/30 border border-white/5 backdrop-blur-xl">
+              <p className="text-xs text-violet-100 leading-relaxed mb-4">
+                "We don't just build software; we architect the physical intelligence of your space."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-400 to-indigo-400 p-[2px]">
+                   <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-[10px] font-bold">ST</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest">Satyam Tomar</div>
+                  <div className="text-[9px] opacity-60">Lead IoT Architect</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-400 to-indigo-400 p-[2px]">
+                   <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-[10px] font-bold">VR</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest">Vishesh Raj</div>
+                  <div className="text-[9px] opacity-60">Lead IoT Architect</div>
+                </div>
+              </div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
